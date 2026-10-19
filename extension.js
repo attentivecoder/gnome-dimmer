@@ -48,9 +48,18 @@ class DimSlider extends QuickSlider {
             }
         });
 
-        this.connect('destroy', () => {
+    }
+
+    destroy() {
+        if (this._sliderChangedId) {
+            this.slider.disconnect(this._sliderChangedId);
+            this._sliderChangedId = 0;
+        }
+        if (this._settingsChangedId) {
             this._settings.disconnect(this._settingsChangedId);
-        });
+            this._settingsChangedId = 0;
+        }
+        super.destroy();
     }
 });
 

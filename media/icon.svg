@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <radialGradient id="lit" cx="0.38" cy="0.35" r="0.75">
+      <stop offset="0" stop-color="#f3e3b8"/>
+      <stop offset="0.6" stop-color="#d9c08a"/>
+      <stop offset="1" stop-color="#b39462"/>
+    </radialGradient>
+    <radialGradient id="dark" cx="0.7" cy="0.35" r="0.8">
+      <stop offset="0" stop-color="#2c3f5c"/>
+      <stop offset="1" stop-color="#16233a"/>
+    </radialGradient>
+    <clipPath id="left"><rect x="0" y="0" width="512" height="1024"/></clipPath>
+    <clipPath id="right"><rect x="512" y="0" width="512" height="1024"/></clipPath>
+  </defs>
+  <rect width="1024" height="1024" fill="#ffffff"/>
+  <!-- lit half -->
+  <g clip-path="url(#left)">
+    <circle cx="512" cy="512" r="400" fill="url(#lit)"/>
+    <g fill="#a8885a" opacity="0.45">
+      <circle cx="330" cy="380" r="58"/>
+      <circle cx="420" cy="620" r="44"/>
+      <circle cx="250" cy="560" r="30"/>
+      <circle cx="380" cy="770" r="24"/>
+      <circle cx="450" cy="250" r="22"/>
+    </g>
+  </g>
+  <!-- dark half -->
+  <g clip-path="url(#right)">
+    <circle cx="512" cy="512" r="400" fill="url(#dark)"/>
+    <g fill="#0f1a2c" opacity="0.5">
+      <circle cx="690" cy="400" r="50"/>
+      <circle cx="620" cy="660" r="38"/>
+      <circle cx="790" cy="590" r="26"/>
+    </g>
+  </g>
+  <circle cx="512" cy="512" r="400" fill="none" stroke="#14213a" stroke-width="20"/>
+</svg>

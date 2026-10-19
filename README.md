@@ -11,6 +11,9 @@ Screen Dimmer adds a **Screen dimming** slider to GNOME's Quick Settings menu.
 It's made for external monitors, where GNOME's own brightness slider doesn't show up because the backlight can't be controlled from the computer.
 Instead of touching the monitor's hardware, it lays a black, click‑through layer over the whole screen and changes how see‑through that layer is.
 
+> **Not meant for laptop screens.** A laptop's built‑in screen already has a real brightness slider in Quick Settings, so use that one.
+> Screen Dimmer dims **all connected screens at once**, so with a laptop and an external monitor, the laptop screen is dimmed too.
+
 ---
 
 ## 🌤️ Features
@@ -128,15 +131,51 @@ gsettings --schemadir $SCHEMAS set org.gnome.shell.extensions.screen-dimmer dim-
 
 ## 🏷️ Packaging for release
 
-```bash
-gnome-extensions pack --force
-```
-
-This builds `screen-dimmer@attentivecoder.shell-extension.zip`, which can be installed with:
+Pushing a `v*` tag builds the ZIP, runs shexli on it and attaches it to a GitHub release automatically (see
+`.github/workflows/release.yml`):
 
 ```bash
-gnome-extensions install --force screen-dimmer@attentivecoder.shell-extension.zip
+git tag v1
+git push origin v1
 ```
+
+To build it by hand:
+
+```bash
+rm -f screen-dimmer@attentivecoder.zip
+zip -r screen-dimmer@attentivecoder.zip \
+  extension.js \
+  metadata.json \
+  schemas \
+  -x "schemas/gschemas.compiled"
+```
+
+Install the ZIP locally with:
+
+```bash
+gnome-extensions install --force screen-dimmer@attentivecoder.zip
+```
+
+`media/` (the icon for extensions.gnome.org), `install.sh` and the compiled schemas are not part of the
+bundle; GNOME Shell 45+ compiles the schemas on install.
+
+## 🔍 Review checks with shexli
+
+[shexli](https://pypi.org/project/shexli/) runs the same static checks that extensions.gnome.org (EGO)
+reviewers look for: leftover signal connections, bad `metadata.json` fields, files that shouldn't be shipped, and so on.
+Run it on the **ZIP**, not the project folder. The folder includes `.git/` and `.gitignore`, which shexli reports as shipped files.
+
+```bash
+python3 -m venv venv
+./venv/bin/pip install shexli
+./venv/bin/shexli screen-dimmer@attentivecoder.zip
+```
+
+The release workflow runs it too, and the report shows up in the Actions log.
+
+**Known false positive:** shexli 0.2.1 flags `"51"` in `shell-version` as an "implausible future release"
+(`EGO-M-004`), because it treats anything above 50 as the future. GNOME 51 is a stable release and
+extensions.gnome.org accepts it, so this finding can be ignored. Everything else should come back clean before uploading.
 
 ## 🔒 Network & privacy
 

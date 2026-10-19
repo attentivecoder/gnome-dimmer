@@ -1,8 +1,11 @@
 # Compiled settings schema (install.sh builds it in the install folder)
 schemas/gschemas.compiled
 
-# Packages from `gnome-extensions pack`
-*.shell-extension.zip
+# Release ZIPs
+*.zip
+
+# Python venv for shexli
+venv/
 
 # Editor and OS files
 .vscode/

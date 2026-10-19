@@ -1,0 +1,34 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Build zip
+        run: |
+          zip -r screen-dimmer@attentivecoder.zip \
+            extension.js \
+            metadata.json \
+            schemas \
+            -x "schemas/gschemas.compiled"
+
+      - name: Run shexli (EGO review checks)
+        run: |
+          pip install shexli
+          shexli screen-dimmer@attentivecoder.zip
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: screen-dimmer@attentivecoder.zip
