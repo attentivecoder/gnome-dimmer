@@ -1,0 +1,11 @@
+# Compiled settings schema (install.sh builds it in the install folder)
+schemas/gschemas.compiled
+
+# Packages from `gnome-extensions pack`
+*.shell-extension.zip
+
+# Editor and OS files
+.vscode/
+*.swp
+*~
+.DS_Store
