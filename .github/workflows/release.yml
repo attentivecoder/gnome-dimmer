@@ -19,6 +19,7 @@ jobs:
         run: |
           zip -r screen-dimmer@attentivecoder.zip \
             extension.js \
+            prefs.js \
             metadata.json \
             schemas \
             -x "schemas/gschemas.compiled"

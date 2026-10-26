@@ -19,10 +19,15 @@ Instead of touching the monitor's hardware, it lays a black, click‑through lay
 ## 🌤️ Features
 
 ### 🎚️ Dimming slider in Quick Settings
-- Full‑width **Screen dimming** slider. Drag right to darken
+- Full‑width **Screen dimming** slider, placed **right below the volume slider** together with GNOME's own sliders
+- Drag right to darken, or turn on **Invert slider direction** in the settings to make right mean brighter, like GNOME's brightness slider
 - **Click the sun icon** to turn dimming off, and click it again to go back to the level you were using
 - The level is saved in GSettings, so it's kept across logouts and restarts
 - Slider and setting stay in sync both ways: changing the level with `gsettings` moves the slider
+
+### ⌨️ Keyboard shortcuts
+- Set your own **Darker** and **Brighter** shortcuts in the settings
+- Each press changes the dimming by one step (10% by default) and shows the level in GNOME's on‑screen popup, like the volume keys
 
 ### 🌑 Dims everything, including menus
 - The dark layer sits on the stage itself, **above all of GNOME Shell's UI**
@@ -34,19 +39,39 @@ Instead of touching the monitor's hardware, it lays a black, click‑through lay
 - At level 0 the layer is hidden entirely, not just transparent
 
 ### ⚡ Fast & lightweight
-- A single file of code, no background daemons, no dependencies
+- No background daemons, no dependencies
 - No network access at all
 
 ---
 
 ## ⚙️ Settings
 
-There's no preferences window. Everything is in the schema `org.gnome.shell.extensions.screen-dimmer`:
+Open the settings window from the **Extensions** app, or with:
 
-| Key           | Range     | Default | Meaning                                                    |
-| ------------- | --------- | ------- | ---------------------------------------------------------- |
-| `dim-level`   | 0.0–1.0   | 0.0     | The slider's position. 0 = no dimming                      |
-| `max-opacity` | 0.1–0.98  | 0.85    | How opaque the black layer is with the slider all the way right |
+```bash
+gnome-extensions prefs screen-dimmer@attentivecoder
+```
+
+### Slider
+- **Invert slider direction:** off = drag right for darker, on = drag right for brighter
+- **Maximum darkness:** how dark the screen gets at full dimming (10–98%, default 85%)
+
+### Keyboard Shortcuts
+- **Darker / Brighter:** click a row and press the keys. Esc cancels, Backspace removes the shortcut. A shortcut needs Ctrl, Alt, Super or Shift, except F‑keys and media keys
+- **Step size:** how much one key press changes the dimming (1–50%, default 10%)
+
+### All keys
+
+Everything is stored in the schema `org.gnome.shell.extensions.screen-dimmer`:
+
+| Key                 | Range     | Default | Meaning                                                    |
+| ------------------- | --------- | ------- | ---------------------------------------------------------- |
+| `dim-level`         | 0.0–1.0   | 0.0     | How dark the screen is. 0 = no dimming                     |
+| `max-opacity`       | 0.1–0.98  | 0.85    | How opaque the black layer is at full dimming              |
+| `invert-slider`     | true/false | false  | Drag right for brighter instead of darker                  |
+| `step`              | 0.01–0.5  | 0.1     | How much one shortcut press changes `dim-level`            |
+| `shortcut-darker`   | list      | none    | Shortcut that dims one step more, e.g. `['<Super>F9']`     |
+| `shortcut-brighter` | list      | none    | Shortcut that dims one step less, e.g. `['<Super>F10']`    |
 
 The layer's opacity is `dim-level × max-opacity`.
 
@@ -73,7 +98,7 @@ cd gnome-dimmer
 ./install.sh
 ```
 
-This copies `metadata.json`, `extension.js` and the settings schema to
+This copies `metadata.json`, `extension.js`, `prefs.js` and the settings schema to
 `~/.local/share/gnome-shell/extensions/screen-dimmer@attentivecoder/` and compiles the schema there.
 
 On Wayland, GNOME Shell only notices a new extension after you **log out and back in**. Then:
@@ -109,6 +134,10 @@ On GNOME 48 use `dbus-run-session gnome-shell --nested --wayland`.
 1. Move the slider and check that the screen darkens and lightens
 2. With dimming on, open the top‑bar menus, Quick Settings, the app grid and an app's pop‑up menu. All of them should be dimmed
 3. Click the sun icon twice: off, then back to the earlier level
+4. The slider sits right below the volume slider in Quick Settings
+5. Turn on **Invert slider direction**: the slider flips, and dragging right now makes the screen brighter
+6. Set the Darker/Brighter shortcuts and press them: the screen changes one step and the on‑screen popup shows the level
+7. Turn the extension off and on in the Extensions app: the slider, the dark layer and the shortcuts go away and come back
 
 ### Debug GNOME Shell logs
 
@@ -127,7 +156,9 @@ gsettings --schemadir $SCHEMAS set org.gnome.shell.extensions.screen-dimmer dim-
 ### How it works
 - The dark layer is an `St.Widget` bound to the stage's size with a `Clutter.BindConstraint`
 - It lives directly on `global.stage`, not inside `Main.uiGroup`. Menus, OSDs and dialogs move themselves to the top of `uiGroup` when they open, so a layer inside it would leave them bright. Whenever the stage gets a new child, the layer is raised back on top
-- The slider is a `QuickSlider` added through a `SystemIndicator`, spanning two columns so it fills the menu's width
+- The slider is a `QuickSlider` added through a `SystemIndicator`, spanning two columns so it fills the menu's width. After adding it, the extension moves it in front of the microphone slider, which is the item GNOME places right after the volume slider. If that item isn't there, the slider stays at GNOME's default spot at the bottom
+- `dim-level` always means "how dark". With **Invert slider direction** on, the slider just shows `1 − dim-level`
+- Shortcuts are registered with `Main.wm.addKeybinding()` and work on the desktop, in the overview and while a menu is open
 
 ## 🏷️ Packaging for release
 
@@ -145,6 +176,7 @@ To build it by hand:
 rm -f screen-dimmer@attentivecoder.zip
 zip -r screen-dimmer@attentivecoder.zip \
   extension.js \
+  prefs.js \
   metadata.json \
   schemas \
   -x "schemas/gschemas.compiled"

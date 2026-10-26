@@ -14,5 +14,26 @@
       <summary>Maximum overlay opacity</summary>
       <description>Opacity of the black overlay when the slider is at its maximum. Keeps the screen from going fully black.</description>
     </key>
+    <key name="invert-slider" type="b">
+      <default>false</default>
+      <summary>Invert slider direction</summary>
+      <description>When true, dragging the slider right makes the screen brighter, like GNOME's brightness slider. When false, dragging right makes it darker.</description>
+    </key>
+    <key name="step" type="d">
+      <range min="0.01" max="0.5"/>
+      <default>0.1</default>
+      <summary>Shortcut step</summary>
+      <description>How much one press of a dimming shortcut changes the dim level.</description>
+    </key>
+    <key name="shortcut-darker" type="as">
+      <default>[]</default>
+      <summary>Shortcut: darker</summary>
+      <description>Keyboard shortcut that dims the screen one step more.</description>
+    </key>
+    <key name="shortcut-brighter" type="as">
+      <default>[]</default>
+      <summary>Shortcut: brighter</summary>
+      <description>Keyboard shortcut that dims the screen one step less.</description>
+    </key>
   </schema>
 </schemalist>

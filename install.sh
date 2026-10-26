@@ -6,7 +6,7 @@ SRC="$(cd "$(dirname "$0")" && pwd)"
 DEST="$HOME/.local/share/gnome-shell/extensions/$UUID"
 
 mkdir -p "$DEST/schemas"
-cp "$SRC/metadata.json" "$SRC/extension.js" "$DEST/"
+cp "$SRC/metadata.json" "$SRC/extension.js" "$SRC/prefs.js" "$DEST/"
 cp "$SRC/schemas/"*.gschema.xml "$DEST/schemas/"
 glib-compile-schemas "$DEST/schemas/"
 
