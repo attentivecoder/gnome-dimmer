@@ -1,7 +1,7 @@
 {
   "uuid": "screen-dimmer@attentivecoder",
   "name": "Screen Dimmer",
-  "description": "Software dimming for external monitors via a Quick Settings slider.",
+  "description": "Dimming tool for external monitors via a Quick Settings slider.\n\nNot meant for laptop screens, which already have a brightness slider. Dims all connected screens at once. Optional keyboard shortcuts and inverted slider direction in the settings.",
   "shell-version": ["48", "49", "50", "51"],
   "url": "https://github.com/attentivecoder/gnome-dimmer",
   "settings-schema": "org.gnome.shell.extensions.screen-dimmer",
